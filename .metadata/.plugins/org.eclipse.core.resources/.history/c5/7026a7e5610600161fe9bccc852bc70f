@@ -37,7 +37,6 @@ public class BufferClass {
   final static SimpleFillSymbol SYM_BUFFER =
 	      new SimpleFillSymbol(new Color(0, 0, 255, 80), SYM_LINE);
   private int buffer_distance;
-  private JTextField pText = new JTextField();
  
   
   public class MyOverLay extends MapOverlay {
@@ -52,8 +51,6 @@ public class BufferClass {
 		  // point clicked
 	      Point currPoint = jMap.toMapPoint(event.getX(), event.getY());
 	      if (event.getButton() == MouseEvent.BUTTON3) {
-	    	  String size = pText.getText();
-	    	  buffer_distance = Integer.parseInt(size);
 	    	  bufferedArea = GeometryEngine.buffer(
 	                  currPoint,
 	                  jMap.getSpatialReference(),
@@ -107,10 +104,11 @@ public class BufferClass {
     graphicslayer = new GraphicsLayer();
     layers.add(graphicslayer);
     map.addMapOverlay(new MyOverLay(map, graphicslayer));
-    
+    JTextField pText = new JTextField();
     pText.setBounds(10,200,200,50);
     pText.setText("100");
-    
+    String size = pText.getText();
+    buffer_distance = Integer.parseInt(size);
     window.add(pText);
 
     // If you don't use MapOptions, use the empty JMap constructor and add a tiled layer

@@ -1,8 +1,6 @@
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
@@ -36,8 +34,6 @@ public class BufferClass {
 	      new SimpleMarkerSymbol(new Color(200, 0, 0, 200), 8, SimpleMarkerSymbol.Style.CIRCLE);
   final static SimpleFillSymbol SYM_BUFFER =
 	      new SimpleFillSymbol(new Color(0, 0, 255, 80), SYM_LINE);
-  private int buffer_distance;
-  private JTextField pText = new JTextField();
  
   
   public class MyOverLay extends MapOverlay {
@@ -52,12 +48,10 @@ public class BufferClass {
 		  // point clicked
 	      Point currPoint = jMap.toMapPoint(event.getX(), event.getY());
 	      if (event.getButton() == MouseEvent.BUTTON3) {
-	    	  String size = pText.getText();
-	    	  buffer_distance = Integer.parseInt(size);
 	    	  bufferedArea = GeometryEngine.buffer(
 	                  currPoint,
 	                  jMap.getSpatialReference(),
-	                  buffer_distance,
+	                  1000,
 	                  jMap.getSpatialReference().getUnit());
 	    	  Graphic pointGraphic = new Graphic(currPoint,BufferClass.SYM_POINT);
 	    	  gLayer.addGraphic(pointGraphic);
@@ -107,11 +101,6 @@ public class BufferClass {
     graphicslayer = new GraphicsLayer();
     layers.add(graphicslayer);
     map.addMapOverlay(new MyOverLay(map, graphicslayer));
-    
-    pText.setBounds(10,200,200,50);
-    pText.setText("100");
-    
-    window.add(pText);
 
     // If you don't use MapOptions, use the empty JMap constructor and add a tiled layer
     //map = new JMap();
