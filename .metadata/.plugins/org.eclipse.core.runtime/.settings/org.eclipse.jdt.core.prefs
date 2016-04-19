@@ -1,6 +1,6 @@
 eclipse.preferences.version=1
 org.eclipse.jdt.core.builder.resourceCopyExclusionFilter=
-org.eclipse.jdt.core.classpathVariable.ARCGIS_RUNTIME_FOR_JAVA=D\:/Java/eclipse/configuration/org.eclipse.osgi/924/0/.cp/lib/
+org.eclipse.jdt.core.classpathVariable.ARCGIS_RUNTIME_FOR_JAVA=C\:/Users/chen7012/eclipse/java-mars/eclipse/configuration/org.eclipse.osgi/485/0/.cp/lib/
 org.eclipse.jdt.core.codeComplete.visibilityCheck=enabled
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8

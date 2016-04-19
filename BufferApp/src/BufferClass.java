@@ -2,18 +2,72 @@
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import com.esri.runtime.ArcGISRuntime;
+import com.esri.core.geometry.Geometry;
+import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.Point;
+import com.esri.core.map.Graphic;
+import com.esri.core.symbol.SimpleFillSymbol;
+
+import com.esri.core.symbol.SimpleLineSymbol;
+import com.esri.core.symbol.SimpleMarkerSymbol;
+
+import com.esri.map.GraphicsLayer;
 import com.esri.map.JMap;
+import com.esri.map.LayerList;
 import com.esri.map.MapOptions;
 import com.esri.map.MapOptions.MapType;
+import com.esri.map.MapOverlay;
+
 import java.awt.event.MouseEvent;
 
 public class BufferClass {
 
   private JFrame window;
   private JMap map;
+  private GraphicsLayer graphicslayer;
+  final static SimpleLineSymbol SYM_LINE   = new SimpleLineSymbol(Color.RED, 2.0f);
+  final static SimpleMarkerSymbol SYM_POINT =
+	      new SimpleMarkerSymbol(new Color(200, 0, 0, 200), 8, SimpleMarkerSymbol.Style.CIRCLE);
+  final static SimpleFillSymbol SYM_BUFFER =
+	      new SimpleFillSymbol(new Color(0, 0, 255, 80), SYM_LINE);
+ 
+  
+  public class MyOverLay extends MapOverlay {
+	  
+	  JMap jMap;
+	  GraphicsLayer gLayer;
+	  Geometry bufferedArea = null;
+	  @Override
+	  public void onMouseClicked(MouseEvent event) {
+		  super.onMouseClicked(event);
+		  
+		  // point clicked
+	      Point currPoint = jMap.toMapPoint(event.getX(), event.getY());
+	      if (event.getButton() == MouseEvent.BUTTON3) {
+	    	  bufferedArea = GeometryEngine.buffer(
+	                  currPoint,
+	                  jMap.getSpatialReference(),
+	                  1000,
+	                  jMap.getSpatialReference().getUnit());
+	    	  Graphic pointGraphic = new Graphic(currPoint,BufferClass.SYM_POINT);
+	    	  gLayer.addGraphic(pointGraphic);
+	    	  Graphic bufferGraphic = new Graphic(bufferedArea,BufferClass.SYM_BUFFER);
+	    	  gLayer.addGraphic(bufferGraphic);
+	      }
+		  
+	  }
+	  
+	  MyOverLay(JMap jMap, GraphicsLayer graphicsLayer){
+		  this.jMap = jMap;
+	      this.gLayer = graphicsLayer;
+	  }
+  }
+  
+  
 
   public BufferClass() {
     window = new JFrame();
@@ -41,8 +95,12 @@ public class BufferClass {
     //ArcGISRuntime.setClientID("your Client ID");
 
     // Using MapOptions allows for a common online basemap to be chosen
-    MapOptions mapOptions = new MapOptions(MapType.TOPO);
+    MapOptions mapOptions = new MapOptions(MapType.TOPO,57.5000, -5.0000, 12);
     map = new JMap(mapOptions);
+    LayerList layers = map.getLayers();
+    graphicslayer = new GraphicsLayer();
+    layers.add(graphicslayer);
+    map.addMapOverlay(new MyOverLay(map, graphicslayer));
 
     // If you don't use MapOptions, use the empty JMap constructor and add a tiled layer
     //map = new JMap();
@@ -53,9 +111,14 @@ public class BufferClass {
     // Add the JMap to the JFrame's content pane
     window.getContentPane().add(map);
   
-  public void onMouseClicked(event) {
-
+//    public void onMouseClicked(event) {
+//	  
+//    }
+	  
   }
+  
+
+  
 
   /**
    * Starting point of this application.
@@ -76,3 +139,4 @@ public class BufferClass {
     });
   }
 }
+
